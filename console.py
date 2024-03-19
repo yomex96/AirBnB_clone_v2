@@ -1,9 +1,3 @@
-console.py
-
-Details
-
-Activity
-
 #!/usr/bin/python3
 """ The Console Module """
 import cmd
