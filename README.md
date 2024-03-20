@@ -191,5 +191,5 @@ Usage: <class_name>.update(<_id>, <dictionary>)
 <br>
 
 ## Authors
-- Onawole Abayomi robert
-- Benjamin richard
+- Onawole Abayomi Robert
+- Benjamin Richard
