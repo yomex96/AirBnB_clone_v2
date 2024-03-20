@@ -1,4 +1,4 @@
-####README for 0x02. AirBnB clone - MySQL
+###README for 0x02. AirBnB clone - MySQL
 
 <center> <h1>HBNB - The Console</h1> </center>
 
