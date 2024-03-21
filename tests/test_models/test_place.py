@@ -13,6 +13,11 @@ class test_Place(test_basemodel):
         self.name = "Place"
         self.value = Place
 
+    def __init__(self, *args, **kwargs):
+        """Constructor"""
+        super().__init__(*args, **kwargs)
+        self.amenity_ids = []
+
     def test_city_id(self):
         """ """
         new = self.value()

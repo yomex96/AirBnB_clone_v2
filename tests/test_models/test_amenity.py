@@ -12,11 +12,20 @@ import inspect
 import unittest
 storage_t = getenv("HBNB_TYPE_STORAGE")
 
-class test_Amenity(test_basemodel):
-    """ """
+
+class TestAmenity(TestBaseModel):
+    """
+    Test class for the Amenity model.
+    """
 
     def __init__(self, *args, **kwargs):
-        """ """
+        """
+        Constructor for TestAmenity.
+
+        Parameters:
+        *args: Variable length argument list.
+        **kwargs: Arbitrary keyword arguments.
+        """
         super().__init__(*args, **kwargs)
         self.name = "Amenity"
         self.value = Amenity
@@ -24,7 +33,7 @@ class test_Amenity(test_basemodel):
     def test_name2(self):
         """ """
         new = self.value()
-        self.assertEqual(type(new.name), str)
+        self.assertIsInstance(new.name, str)
 
 
 class Test_PEP8(unittest.TestCase):
@@ -147,14 +156,13 @@ class TestAmenity(unittest.TestCase):
     def test_to_dict_creates_dict(self):
         """test to_dict method creates a dictionary with proper attrs"""
         am = Amenity()
-        print(am.__dict__)
         new_d = am.to_dict()
         self.assertEqual(type(new_d), dict)
-        self.assertFalse("_sa_instance_state" in new_d)
+        self.assertNotIn("_sa_instance_state", new_d)
         for attr in am.__dict__:
             if attr != "_sa_instance_state":
-                self.assertTrue(attr in new_d)
-        self.assertTrue("__class__" in new_d)
+                self.assertIn(attr, new_d)
+        self.assertIn("__class__", new_d)
 
     def test_to_dict_values(self):
         """test that values in dict returned from to_dict are correct"""
