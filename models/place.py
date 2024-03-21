@@ -8,11 +8,25 @@ from models.review import Review
 from models.amenity import Amenity
 from os import getenv
 
+if getenv("HBNB_TYPE_STORAGE") == "db":
+    place_amenity = Table('place_amenity',
+                          Base.metadata,
+                          Column('place_id', String(60),
+                                 ForeignKey('places.id',
+                                            onupdate='CASCADE',
+                                            ondelete='CASCADE'),
+                                 primary_key=True),
+                          Column('amenity_id', String(60),
+                                 ForeignKey('amenities.id',
+                                            onupdate='CASCADE',
+                                            ondelete='CASCADE'),
+                                 primary_key=True))
+
+
 class Place(BaseModel, Base):
     """ A place to stay """
-    __tablename__ = "places"
-
     if getenv("HBNB_TYPE_STORAGE") == "db":
+        __tablename__ = "places"
         city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
         user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
         name = Column(String(128), nullable=False)
@@ -23,8 +37,10 @@ class Place(BaseModel, Base):
         price_by_night = Column(Integer, default=0, nullable=False)
         latitude = Column(Float)
         longitude = Column(Float)
-        reviews = relationship("Review", backref="Place", cascade="all, delete-orphan")
-        amenities = relationship("Amenity", secondary=place_amenity, viewonly=False)
+        reviews = relationship("Review", backref="Place",
+                               cascade="all, delete-orphan")
+        amenities = relationship("Amenity", secondary=place_amenity,
+                                 viewonly=False)
     else:
         city_id = ""
         user_id = ""
@@ -46,29 +62,22 @@ class Place(BaseModel, Base):
         @property
         def reviews(self):
             """Get a list of all linked Reviews."""
-            return [review for review in models.storage.all(Review).values() if review.place_id == self.id]
+            review_list = []
+            for review in list(models.storage.all(Review).values()):
+                if review.place_id == self.id:
+                    review_list.append(review)
+            return review_list
 
         @property
         def amenities(self):
             """Get/set linked Amenities."""
-            return [amenity for amenity in models.storage.all(Amenity).values() if amenity.id in self.amenity_ids]
+            amenity_list = []
+            for amenity in list(models.storage.all(Amenity).values()):
+                if amenity.id in self.amenity_ids:
+                    amenity_list.append(amenity)
+            return amenity_list
 
         @amenities.setter
         def amenities(self, value):
             if isinstance(value, Amenity):
                 self.amenity_ids.append(value.id)
-
-# Table definition for place_amenity
-if getenv("HBNB_TYPE_STORAGE") == "db":
-    place_amenity = Table('place_amenity',
-                          Base.metadata,
-                          Column('place_id', String(60),
-                                 ForeignKey('places.id',
-                                            onupdate='CASCADE',
-                                            ondelete='CASCADE'),
-                                 primary_key=True),
-                          Column('amenity_id', String(60),
-                                 ForeignKey('amenities.id',
-                                            onupdate='CASCADE',
-                                            ondelete='CASCADE'),
-                                 primary_key=True))
