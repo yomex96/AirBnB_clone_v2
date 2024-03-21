@@ -23,7 +23,7 @@ class FileStorage:
         else:
             newdict = {}
             for key, value in self.__objects.items():
-                if type(value) == cls:
+                if isinstance(value, cls):
                     newdict[key] = value
             return newdict
 
